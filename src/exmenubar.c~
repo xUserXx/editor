@@ -1,0 +1,232 @@
+/* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*-  */
+/*
+ * Editor
+ * Copyright (C) 2013 UserX <userx.gnu@gmail.com>
+ * 
+ * Editor is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Editor is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along
+ * with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#include "definitions.h"
+
+struct _exmenubarPrivate {
+	
+	GtkWidget * FileMenu;
+	GtkWidget * EditMenu;
+	GtkWidget * ViewMenu;
+	GtkWidget * HelpMenu;
+	
+	GtkWidget * FileMenuItem;
+	GtkWidget * EditMenuItem;
+	GtkWidget * ViewMenuItem;
+	GtkWidget * HelpMenuItem;
+	
+	GtkWidget * NewFileItem;
+	GtkWidget * OpenFileItem;
+	GtkWidget * SaveFileItem;
+	GtkWidget * SaveAsFileItem;
+	GtkWidget * ExitFileItem;
+
+	GtkWidget * UndoEditItem;
+	GtkWidget * RedoEditItem;
+	GtkWidget * CopyEditItem;
+	GtkWidget * CutEditItem;
+	GtkWidget * PasteEditEditem;
+	GtkWidget * SelectAllEditItem;
+	GtkWidget * ClearEditItem;
+	GtkWidget * SearchEditItem;
+	GtkWidget * PrefEditItem;
+
+	GtkWidget * ViewSbmenu;
+	GtkWidget * LangViewItem;
+	GtkWidget * cViewItem;
+	GtkWidget * cppViewItem;
+	GtkWidget * pyViewItem;
+	GtkWidget * jvViewItem;
+	GtkWidget * phpViewItem;
+	GtkWidget * htmlViewItem;
+	
+	GtkWidget * AboutHelpItem;
+
+	GtkAccelGroup * accel_group;
+	
+};
+
+#define EX_MENUBAR_GET_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), EX_TYPE_MENUBAR, exmenubarPrivate))
+
+
+
+G_DEFINE_TYPE (exmenubar, ex_menubar, GTK_TYPE_MENU_BAR);
+
+// constructor ::
+exmenubar * ex_menubar_new(void) {
+
+	return g_object_new (EX_TYPE_MENUBAR, NULL);
+	
+}
+
+// I don't need to say ::
+void ex_menubar_create_default_menu (exmenubar * ex_menubar) {
+
+	exmenubarPrivate * priv;
+	priv = EX_MENUBAR_GET_PRIVATE(ex_menubar);
+
+	
+	priv->FileMenu = gtk_menu_new();
+	priv->EditMenu = gtk_menu_new();
+	priv->ViewMenu = gtk_menu_new();
+	priv->HelpMenu = gtk_menu_new();
+	priv->ViewSbmenu = gtk_menu_new ();
+
+	priv->FileMenuItem = gtk_menu_item_new_with_mnemonic ("_File");
+	priv->EditMenuItem = gtk_menu_item_new_with_mnemonic ("_Edit");
+	priv->ViewMenuItem = gtk_menu_item_new_with_mnemonic ("_View");
+	priv->HelpMenuItem = gtk_menu_item_new_with_mnemonic ("_Help");
+
+}
+
+
+// I don't need to say ...
+void ex_menubar_create_default_menu_items (exmenubar * ex_menubar) {
+	exmenubarPrivate * priv;
+	priv = EX_MENUBAR_GET_PRIVATE(ex_menubar);
+
+	
+	priv->NewFileItem = gtk_image_menu_item_new_from_stock (GTK_STOCK_NEW, priv->accel_group);
+	priv->OpenFileItem = gtk_image_menu_item_new_from_stock (GTK_STOCK_OPEN, priv->accel_group);
+	priv->SaveFileItem = gtk_image_menu_item_new_from_stock (GTK_STOCK_SAVE, priv->accel_group);
+	priv->SaveAsFileItem = gtk_image_menu_item_new_from_stock (GTK_STOCK_SAVE_AS, priv->accel_group);
+	priv->ExitFileItem = gtk_image_menu_item_new_from_stock (GTK_STOCK_QUIT, priv->accel_group);
+
+	priv->UndoEditItem = gtk_image_menu_item_new_from_stock(GTK_STOCK_UNDO, priv->accel_group);
+	priv->RedoEditItem = gtk_image_menu_item_new_from_stock (GTK_STOCK_REDO, priv->accel_group);
+	priv->CutEditItem = gtk_image_menu_item_new_from_stock (GTK_STOCK_CUT, priv->accel_group);
+	priv->CopyEditItem = gtk_image_menu_item_new_from_stock (GTK_STOCK_COPY, priv->accel_group);
+	priv->PasteEditEditem = gtk_image_menu_item_new_from_stock (GTK_STOCK_PASTE, priv->accel_group);
+	priv->SelectAllEditItem = gtk_image_menu_item_new_from_stock (GTK_STOCK_SELECT_ALL, priv->accel_group);
+	priv->ClearEditItem = gtk_image_menu_item_new_from_stock(GTK_STOCK_CLEAR, priv->accel_group);
+	priv->SearchEditItem = gtk_image_menu_item_new_from_stock (GTK_STOCK_FIND_AND_REPLACE, priv->accel_group);
+	priv->PrefEditItem = gtk_image_menu_item_new_from_stock (GTK_STOCK_PREFERENCES, priv->accel_group);
+
+	priv->LangViewItem = gtk_menu_item_new_with_mnemonic ("_Source View");
+	priv->cViewItem = gtk_menu_item_new_with_mnemonic ("_C");
+	priv->cppViewItem = gtk_menu_item_new_with_mnemonic ("_C++");
+	priv->pyViewItem = gtk_menu_item_new_with_mnemonic ("_Python");
+	priv->jvViewItem = gtk_menu_item_new_with_mnemonic ("_Java");
+	priv->phpViewItem = gtk_menu_item_new_with_mnemonic ("_Php");
+	priv->htmlViewItem = gtk_menu_item_new_with_mnemonic ("_Html");
+	
+	priv->AboutHelpItem = gtk_image_menu_item_new_from_stock(GTK_STOCK_ABOUT, priv->accel_group);
+
+}
+
+// mount menu ::
+void ex_menubar_mount (exmenubar * ex_menubar) {
+	exmenubarPrivate * priv;
+	priv = EX_MENUBAR_GET_PRIVATE(ex_menubar);
+
+	
+	GtkWidget * sep[4];
+
+
+	sep[0] = gtk_separator_menu_item_new ();
+	sep[1] = gtk_separator_menu_item_new ();
+	sep[2] = gtk_separator_menu_item_new ();
+	sep[3] = gtk_separator_menu_item_new ();
+
+	
+	// File Menu ::
+	gtk_menu_item_set_submenu(GTK_MENU_ITEM(priv->FileMenuItem), priv->FileMenu);
+	gtk_menu_shell_append(GTK_MENU_SHELL(priv->FileMenu), priv->NewFileItem);
+	gtk_menu_shell_append(GTK_MENU_SHELL(priv->FileMenu), priv->OpenFileItem);
+	gtk_menu_shell_append(GTK_MENU_SHELL(priv->FileMenu), priv->SaveFileItem);
+	gtk_menu_shell_append(GTK_MENU_SHELL(priv->FileMenu), priv->SaveAsFileItem);
+	gtk_menu_shell_append(GTK_MENU_SHELL(priv->FileMenu), sep[0]);
+	gtk_menu_shell_append(GTK_MENU_SHELL(priv->FileMenu), priv->ExitFileItem);
+	
+	gtk_menu_shell_append(GTK_MENU_SHELL(ex_menubar), priv->FileMenuItem);
+
+	// Edit Menu ::
+	gtk_menu_item_set_submenu (GTK_MENU_ITEM (priv->EditMenuItem), priv->EditMenu);
+	gtk_menu_shell_append (GTK_MENU_SHELL(priv->EditMenu), priv->UndoEditItem);
+	gtk_menu_shell_append (GTK_MENU_SHELL(priv->EditMenu), priv->RedoEditItem);
+	gtk_menu_shell_append(GTK_MENU_SHELL(priv->EditMenu), sep[1]);
+	gtk_menu_shell_append (GTK_MENU_SHELL (priv->EditMenu), priv->CutEditItem);
+	gtk_menu_shell_append (GTK_MENU_SHELL (priv->EditMenu), priv->CopyEditItem);
+	gtk_menu_shell_append (GTK_MENU_SHELL (priv->EditMenu), priv->PasteEditEditem);
+	gtk_menu_shell_append (GTK_MENU_SHELL (priv->EditMenu), priv->SelectAllEditItem);
+	gtk_menu_shell_append (GTK_MENU_SHELL (priv->EditMenu), priv->ClearEditItem);
+	gtk_menu_shell_append(GTK_MENU_SHELL(priv->EditMenu), sep[2]);
+	gtk_menu_shell_append (GTK_MENU_SHELL (priv->EditMenu), priv->SearchEditItem);
+	gtk_menu_shell_append(GTK_MENU_SHELL(priv->EditMenu), sep[3]);
+	gtk_menu_shell_append (GTK_MENU_SHELL(priv->EditMenu), priv->PrefEditItem);
+	
+	gtk_menu_shell_append (GTK_MENU_SHELL (ex_menubar), priv->EditMenuItem);
+
+	// View Menu ::
+	gtk_menu_item_set_submenu (GTK_MENU_ITEM (priv->ViewMenuItem), priv->ViewMenu);
+	gtk_menu_shell_append (GTK_MENU_SHELL(priv->ViewMenu), priv->LangViewItem);
+	gtk_menu_shell_append (GTK_MENU_SHELL (ex_menubar), priv->ViewMenuItem);
+	
+	// view Submenu ::
+	gtk_menu_item_set_submenu (GTK_MENU_ITEM(priv->LangViewItem), priv->ViewSbmenu );
+	gtk_menu_shell_append (GTK_MENU_SHELL(priv->ViewSbmenu), priv->cViewItem);
+	gtk_menu_shell_append (GTK_MENU_SHELL(priv->ViewSbmenu), priv->cppViewItem);
+	gtk_menu_shell_append (GTK_MENU_SHELL(priv->ViewSbmenu), priv->pyViewItem);
+	gtk_menu_shell_append (GTK_MENU_SHELL(priv->ViewSbmenu), priv->jvViewItem);
+	gtk_menu_shell_append (GTK_MENU_SHELL(priv->ViewSbmenu), priv->phpViewItem);
+	gtk_menu_shell_append (GTK_MENU_SHELL(priv->ViewSbmenu), priv->htmlViewItem);
+	
+	// Help Menu ::
+	gtk_menu_item_set_submenu (GTK_MENU_ITEM (priv->HelpMenuItem), priv->HelpMenu);
+	gtk_menu_shell_append (GTK_MENU_SHELL(priv->HelpMenu), priv->AboutHelpItem);
+	gtk_menu_shell_append (GTK_MENU_SHELL (ex_menubar), priv->HelpMenuItem);
+
+}
+
+
+// initialize private data ::
+static void ex_menubar_init (exmenubar * ex_menubar) {
+    exmenubarPrivate *priv = EX_MENUBAR_GET_PRIVATE(ex_menubar);
+
+	/* TODO: Add initialization code here */
+	priv->accel_group = gtk_accel_group_new ();
+	
+	ex_menubar_create_default_menu (EX_MENUBAR(ex_menubar) );
+	ex_menubar_create_default_menu_items (EX_MENUBAR(ex_menubar) );
+	ex_menubar_mount (EX_MENUBAR (ex_menubar) );
+}
+
+
+// destructor ::
+static void ex_menubar_finalize (GObject * object) {
+	
+	/* TODO: Add deinitalization code here */
+
+	G_OBJECT_CLASS (ex_menubar_parent_class)->finalize (object);
+	
+}
+
+
+static void ex_menubar_class_init (exmenubarClass * klass) {
+	
+	GObjectClass* object_class = G_OBJECT_CLASS (klass);
+/*	GtkMenuBarClass* parent_class = GTK_MENU_BAR_CLASS (klass);*/
+
+	g_type_class_add_private (klass, sizeof (exmenubarPrivate));
+
+	object_class->finalize = ex_menubar_finalize;
+	
+}
+
+

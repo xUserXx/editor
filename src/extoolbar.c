@@ -1,0 +1,112 @@
+/* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*-  */
+/*
+ * Editor
+ * Copyright (C) 2013 userx <userx@osires>
+ * 
+ * Editor is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Editor is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along
+ * with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#include "definitions.h"
+
+struct _extoolbarPrivate
+{
+	GtkToolItem * SaveToolItem;
+	GtkToolItem * OpenToolItem;
+	
+	GtkToolItem * CopyToolItem;
+	GtkToolItem * CutToolItem;
+	GtkToolItem * PasteToolItem;
+	GtkToolItem * SAllToolItem;
+	GtkToolItem * ClearToolItem;
+	GtkToolItem * UndoToolItem;
+	GtkToolItem * RedoToolItem;
+
+	GtkToolItem * FRToolItem;
+	GtkToolItem * FSToolItem;
+};
+
+#define EX_TOOLBAR_GET_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), EX_TYPE_TOOLBAR, extoolbarPrivate))
+
+
+
+G_DEFINE_TYPE (extoolbar, extoolbar, GTK_TYPE_TOOLBAR);
+
+extoolbar * extoolbar_new (void)
+{
+	return g_object_new (EX_TYPE_TOOLBAR, NULL);
+}
+
+static void
+extoolbar_init (extoolbar *extoolbar)
+{
+	
+    extoolbarPrivate *priv = EX_TOOLBAR_GET_PRIVATE(extoolbar);
+
+	GtkToolItem * sep;
+	
+	priv->SaveToolItem = gtk_tool_button_new_from_stock (GTK_STOCK_SAVE);
+	priv->OpenToolItem = gtk_tool_button_new_from_stock (GTK_STOCK_OPEN);
+	gtk_toolbar_insert (GTK_TOOLBAR (extoolbar), priv->OpenToolItem, -1);
+	gtk_toolbar_insert (GTK_TOOLBAR (extoolbar), priv->SaveToolItem, -1);
+
+	
+	sep = gtk_separator_tool_item_new ();
+	gtk_toolbar_insert (GTK_TOOLBAR (extoolbar), sep, -1);
+	
+	priv->CutToolItem = gtk_tool_button_new_from_stock (GTK_STOCK_CUT);
+	priv->CopyToolItem = gtk_tool_button_new_from_stock (GTK_STOCK_COPY);
+	priv->PasteToolItem = gtk_tool_button_new_from_stock (GTK_STOCK_PASTE);
+	priv->SAllToolItem = gtk_tool_button_new_from_stock (GTK_STOCK_SELECT_ALL);
+	priv->ClearToolItem = gtk_tool_button_new_from_stock (GTK_STOCK_CLEAR);
+	priv->UndoToolItem = gtk_tool_button_new_from_stock (GTK_STOCK_UNDO);
+	priv->RedoToolItem = gtk_tool_button_new_from_stock (GTK_STOCK_REDO);
+
+	gtk_toolbar_insert (GTK_TOOLBAR (extoolbar), priv->CutToolItem, -1);
+	gtk_toolbar_insert (GTK_TOOLBAR (extoolbar), priv->CopyToolItem, -1);
+	gtk_toolbar_insert (GTK_TOOLBAR (extoolbar), priv->PasteToolItem, -1);
+	gtk_toolbar_insert (GTK_TOOLBAR (extoolbar), priv->SAllToolItem, -1);
+	gtk_toolbar_insert (GTK_TOOLBAR (extoolbar), priv->ClearToolItem, -1);
+	gtk_toolbar_insert (GTK_TOOLBAR (extoolbar), priv->UndoToolItem, -1);
+	gtk_toolbar_insert (GTK_TOOLBAR (extoolbar), priv->RedoToolItem, -1);
+
+	sep = gtk_separator_tool_item_new ();
+	gtk_toolbar_insert (GTK_TOOLBAR (extoolbar), sep, -1);
+
+	priv->FRToolItem = gtk_tool_button_new_from_stock (GTK_STOCK_FIND_AND_REPLACE);
+	priv->FSToolItem = gtk_tool_button_new_from_stock (GTK_STOCK_SELECT_FONT);
+	gtk_toolbar_insert (GTK_TOOLBAR (extoolbar), priv->FRToolItem, -1);
+	gtk_toolbar_insert (GTK_TOOLBAR (extoolbar), priv->FSToolItem, -1);
+	
+}
+
+static void
+extoolbar_finalize (GObject *object)
+{
+	/* TODO: Add deinitalization code here */
+
+	G_OBJECT_CLASS (extoolbar_parent_class)->finalize (object);
+}
+
+static void
+extoolbar_class_init (extoolbarClass *klass)
+{
+	GObjectClass* object_class = G_OBJECT_CLASS (klass);
+/*	GtkToolbarClass* parent_class = GTK_TOOLBAR_CLASS (klass);*/
+
+	g_type_class_add_private (klass, sizeof (extoolbarPrivate));
+
+	object_class->finalize = extoolbar_finalize;
+}
+
+

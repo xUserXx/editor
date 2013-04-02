@@ -1,0 +1,87 @@
+/* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*-  */
+/*
+ * Editor
+ * Copyright (C) 2013 UserX <userx.gnu@gmail.com>
+ * 
+ * Editor is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Editor is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along
+ * with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#include "definitions.h"
+
+struct _ExScrolledWindowPrivate
+{
+	GtkWidget *  sView;
+	GtkSourceBuffer * sBuffer;
+
+};
+
+#define EX_SCROLLED_WINDOW_GET_PRIVATE(o)  (G_TYPE_INSTANCE_GET_PRIVATE ((o), EX_TYPE_SCROLLED_WINDOW, ExScrolledWindowPrivate))
+
+
+
+G_DEFINE_TYPE (ExScrolledWindow, ex_scrolled_window, GTK_TYPE_SCROLLED_WINDOW);
+
+static void
+ex_scrolled_window_init (ExScrolledWindow *ex_scrolled_window)
+{
+	
+    ExScrolledWindowPrivate * priv = EX_SCROLLED_WINDOW_GET_PRIVATE(ex_scrolled_window);
+
+	GtkWidget * label = gtk_label_new("TESTANDO");
+	priv->sView = gtk_source_view_new ();
+	priv->sBuffer = ex_scrolled_window_get_buffer(EX_SCROLLED_WINDOW (ex_scrolled_window) );
+	g_print("[DEBUG] 1\n");
+	gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW(ex_scrolled_window), GTK_SHADOW_ETCHED_OUT);
+	
+	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW(ex_scrolled_window),
+	                                GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+
+	gtk_container_add (GTK_CONTAINER(GTK_WIDGET(ex_scrolled_window) ), label );
+}
+
+static void
+ex_scrolled_window_finalize (GObject *object)
+{
+	/* TODO: Add deinitalization code here */
+
+	G_OBJECT_CLASS (ex_scrolled_window_parent_class)->finalize (object);
+}
+
+static void
+ex_scrolled_window_class_init (ExScrolledWindowClass *klass)
+{
+	GObjectClass* object_class = G_OBJECT_CLASS (klass);
+/*	GtkScrolledWindowClass* parent_class = GTK_SCROLLED_WINDOW_CLASS (klass);*/
+
+	g_type_class_add_private (klass, sizeof (ExScrolledWindowPrivate));
+
+	object_class->finalize = ex_scrolled_window_finalize;
+}
+
+
+ExScrolledWindow *
+ex_scrolled_window_new (void)
+{
+	return g_object_new (EX_TYPE_SCROLLED_WINDOW, NULL);
+}
+
+GtkSourceBuffer *
+ex_scrolled_window_get_buffer (ExScrolledWindow * sWin)
+{
+
+	ExScrolledWindowPrivate * priv = EX_SCROLLED_WINDOW_GET_PRIVATE (sWin);
+	return GTK_SOURCE_BUFFER( gtk_text_view_get_buffer (GTK_TEXT_VIEW(priv->sView)) );
+	
+}
+
